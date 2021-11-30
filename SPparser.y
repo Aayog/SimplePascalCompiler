@@ -34,7 +34,7 @@ void yyerror(const char []);
 %token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER INTLITERAL
 %token LPAREN RPAREN COMMA PERIOD SEMICOLON COLON PLUSOP MINUSOP ID
 %token DIVOP MULTOP MODOP CHAR REAL BOOLEAN CHARLITERAL REALLITERAL
-%token BOOLEANLITERAL
+%token BOOLEANLITERAL LT GT EQ LE GE NE AND OR NOT 
 
 %left PLUSOP MINUSOP DIVOP MULTOP MODOP
 
@@ -115,6 +115,16 @@ div_op	  : DIVOP {strcpy ($$,"Div");}
 		;
 mult_op	  : MULTOP {strcpy ($$,"Mult");}
 		;
+bexpr : bterm {$$ = strdup($1);}
+		| bexpr OR bterm
+
+bterm : bterm and bfactor {strcpy($$,gen_infix($1,$2,$3));}
+	| bfactor {strcpy($$, $1);}
+bfactor : not bFactor {strcpy($$,gen_infix_unary($1,$2));} 
+	| true {strcpy ($$, "true")} 
+	| false {strcpy ($$, "false")}
+
+		
 ident     :	ID {strcpy($$, yylval.sval);}
 		| {error("IDENTIFIER EXPECTED, BUT FOUND");}
 		;
