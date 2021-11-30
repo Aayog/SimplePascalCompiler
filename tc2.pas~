@@ -1,0 +1,10 @@
+PROGRAM
+   vAr
+      integer a,b,c;
+      real f	    : = 1.1, e, g := 2;
+      char n, h	    : = 'f', d := h;
+      boolean x	    : = true, y := false, w := y;
+   bEgIn
+      READ( b, e, n, w );
+      WrItE ( g, d, w, f * a );
+   END.
