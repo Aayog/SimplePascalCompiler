@@ -75,7 +75,16 @@ extern int yydebug;
     BOOLEAN = 281,
     CHARLITERAL = 282,
     REALLITERAL = 283,
-    BOOLEANLITERAL = 284
+    BOOLEANLITERAL = 284,
+    LT = 285,
+    GT = 286,
+    EQ = 287,
+    LE = 288,
+    GE = 289,
+    NE = 290,
+    AND = 291,
+    OR = 292,
+    NOT = 293
   };
 #endif
 

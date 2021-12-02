@@ -24,6 +24,15 @@ intliteral      (0|-?[1-9]{digit}*)
 realliteral     ([+-]?([0-9]*[.])?[0-9]+)
 charliteral     (.)
 booleanliteral  (true|false)
+and             [&&]
+or              [||]
+not             [!]
+LT              [<]
+GT              [<]
+EQ              [=]
+LE              [<=]
+GE              [>=]
+NE              [<>] 
 id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 %%
 [ \t]+                                          {/* do nothing */}
@@ -55,7 +64,15 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 {charliteral}                                   {yylval.sval = strdup(yytext); return CHARLITERAL;}
 {booleanliteral}                                {yylval.sval = strdup(yytext); return BOOLEANLITERAL;}
 {id}                                            {yylval.sval = strdup(yytext); return ID;}
-
+{and}                                           {return AND;}
+{or}                                            {return OR; } 
+{not}                                           {return NOT;}
+{LT}                                            {return LT; } 
+{GT}                                            {return GT; } 
+{EQ}                                            {return EQ; } 
+{LE}                                            {return LE; } 
+{GE}                                            {return GE; } 
+{NE}                                            {return NE; }  
 [^,]		{std::cout << "SYNTAX ERROR: " << yytext << " IS ILLEGAL" << std::endl;}
 %%
 
