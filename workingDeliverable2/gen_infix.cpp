@@ -6,6 +6,17 @@
 
 extern std::ofstream outFile;
 extern SymbolTable st;
+
+int stringcmp(string a, string b) {
+  if (a == b) {
+    return 0;
+  } else if (a < b){
+    return -1;
+  } else {
+    return 1;
+  }
+}
+
 char * getTemp(std::string type[]) {
 	// converting the previous iteration where only an int is needed
 	// into all data types
@@ -54,15 +65,6 @@ std::string getOpType(std::string operand) {
    * If this is not working, then the symbol table is not handling non std::string values very well
    *
    */ 
-}
-int stringcmp(string a, string b) {
-  if (a == b) {
-    return 0;
-  } else if (a < b){
-    return -1;
-  } else {
-    return 1;
-  }
 }
 std::string getOp(bool intOps, std::string op) {
   if (intOps) {
