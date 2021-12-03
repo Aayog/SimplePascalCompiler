@@ -45,6 +45,7 @@ void yyerror(const char []);
 %type <sval>expr
 %type <sval>bexpr
 %type <sval>bfactor
+%type <sval>bterm
 %type <sval>term
 %type <sval>add_op
 %type <sval>sub_op
