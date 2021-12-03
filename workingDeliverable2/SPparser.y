@@ -19,8 +19,8 @@ std::ofstream outFile;
 void assign (char [], char []);
 void decl_id (char [], char []);
 void finish();
-string gen_infix(char [], char [], char []);
-string gen_infix_not(char [], char []);
+char* gen_infix(char [], char [], char []);
+char* gen_infix_not(char [], char []);
 void read_id (char []);
 void write_expr(char [], char []);
 void error(const char []);
@@ -111,8 +111,8 @@ bexpr : bterm {$$ = strdup($1);}
 bterm : bterm "and" bfactor {strcpy($$,gen_infix($1,"and",$3));}
         | bfactor {strcpy($$, $1);}
 bfactor : "not" bfactor {strcpy($$,gen_infix_not("not",$2));}
-        | "true" {strcpy ($$, "true")}
-        | "false" {strcpy ($$, "false")}
+        | "true" {$$="true";}
+        | "false" {$$= "false";}
 
 term      :	lparen expression rparen   {strcpy($$,$2);}
 		;
