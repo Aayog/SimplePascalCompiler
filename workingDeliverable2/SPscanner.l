@@ -57,5 +57,14 @@ id              [a-zA-Z_][a-zA-Z0-9_]*
 {charliteral}                                   {yylval.sval = strdup(yytext); return CHARLITERAL;}
 {booleanliteral}                                {yylval.sval = strdup(yytext); return BOOLEANLITERAL;}
 {id}                                            {yylval.sval = strdup(yytext); return ID;}
+{and}                                           {return AND;}
+{or}                                            {return OR; } 
+{not}                                           {return NOT;}
+{LT}                                            {return LT; } 
+{GT}                                            {return GT; } 
+{EQ}                                            {return EQ; } 
+{LE}                                            {return LE; } 
+{GE}                                            {return GE; } 
+{NE}                                            {return NE; } 
 %%
 
