@@ -1,0 +1,5 @@
+program
+var integer x;
+begin
+write(6);
+end.

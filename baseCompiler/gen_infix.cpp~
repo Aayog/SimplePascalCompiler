@@ -1,0 +1,127 @@
+#include <ctype.h>
+#include <string.h>
+#include <iostream>
+#include <fstream>
+#include "symbol_table.h"
+extern std::ofstream outFile;
+
+char * getTemp(const char type[]) {
+	// converting the previous iteration where only an int is needed
+	// into all data types
+	static int max_temp_int = 0;
+	static int max_temp_real = 0;
+	static int max_temp_bool = 0;
+	static int max_temp_char = 0;
+	static char tempname[30];
+
+	if (strcmp("integer", type) == 0) {
+	    max_temp_int++;
+	    sprintf(tempname, "&tempi%d", max_temp_int);
+	    outFile << "declare " << tempname << ", integer" << std::endl;
+	} else if (strcmp("real", type) == 0) {
+	    max_temp_real++;
+            sprintf(tempname, "&tempr%d", max_temp_real);
+            outFile << "declare " << tempname << ", real" << std::endl;
+	} else if (strcmp("boolean", type) == 0) {
+	    max_temp_bool++;
+            sprintf(tempname, "&tempb%d", max_temp_bool);
+            outFile << "declare " << tempname << ", boolean" << std::endl;
+	} else if (strcmp("char", type) == 0) {
+	    max_temp_chat++;
+            sprintf(tempname, "&tempc%d", max_temp_char);
+            outFile << "declare " << tempname << ", char" << std::endl;
+	}
+	return tempname;
+}
+
+/* To do:
+ * Figure out if operator is a literal or a ID on symbol table
+ * Based on that, figure out the type of the operator
+ * Build method to figure out type, one from the data, and one from the symbol table
+ * Based on type, convert types if necessary.  Example: rtoi for dividing into an int
+ * 
+ */
+
+const char * getOpType(char[] operand) {
+  if (SymbolTable::exists(operand)){
+    return SymbolTable::getType(operand);
+  } else {
+    std::string err = "ERROR OPERAND NOT FOUND";
+    error(err);
+  }
+  /* else {  // it is a literal
+    if (strcmp(toupper(operand), "FALSE") == 0 ||
+	strcmp(toupper(operand), "TRUE") == 0) {
+      return "boolean"
+	} else if (
+	} */
+}
+
+const char * getOp(char[] type, char* op) {
+  bool isInt = strcmp("integer", type);
+  if (isInt) {
+    if (strcmp("Add", op) == 0) {
+      return "iadd";
+    } else if (strcmp("Sub", op) == 0) {
+      return "isub";
+    } else if (strcmp("Mul", op) == 0) {
+      return "imult";
+    } else if (strcmp("Div", op) == 0) {
+      return "idiv";
+    } else if (strcmp("Mod", op) == 0) {
+      return "imod";
+    }
+  } else {
+    if (strcmp("Add", op) == 0) {
+      return "iadd";
+    } else if (strcmp("Sub", op) == 0) {
+      return "isub";
+    } else if (strcmp("Mul", op) == 0) {
+      return "rmult";
+    } else if (strcmp("Div", op) == 0) {
+      return "rdiv";
+    } else if (strcmp("Mod", op) == 0) {
+      error("MODULUS NOT ALLOWED WITH REAL OPERANDS");
+    }
+  }
+  error("UNKNOWN OPERATION: " + std::string(op));
+  return nullptr;
+}
+
+char* coerceType(char[] operand, char[] type){
+  if (strcmp(SymbolTable::getType(operand), type) != 0){
+
+  }
+
+}
+
+char * gen_infix(char[] operand1, char* op, char[] operand2)
+{  
+  // char tempop[8];
+  // this is a placeholeder, need to design a way to get the type from operands!
+  char[] type1 = getOpType(operand1);
+  char[] type2 = getOpType(operand2);
+  
+  if (strcmp("real", type1) == 0 && strcmp("integer", type2) == 0) {
+	// want to change type
+  } else if (strcmp("integer", type1) == 0 && strcmp("real", type2) == 0) {
+	// want to change type
+  }
+  /*
+  if ( strcmp( op, "Add")==0 )
+    strcpy(tempop,"iadd" );
+  else if ( strcmp( op, "Sub") == 0)
+	  strcpy(tempop,"isub" );
+  else if ( strcmp( op, "Mult") == 0)
+    strcpy(tempop, "imult");
+  else if ( strcmp( op, "Div") == 0)
+    strcpy(tempop, "idiv");
+  else
+    strcpy(tempop, "imod");
+  */
+  char* tempop = getOp(type, op);
+  char* tempname = getTemp(type1);
+  sprintf(tempname, "&tempi%d" ,max_temp);
+  outFile << tempop << " " << operand1 << ", " << operand2 << ", " << tempname << std::endl;
+  return (tempname);
+}

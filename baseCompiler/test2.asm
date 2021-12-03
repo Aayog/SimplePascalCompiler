@@ -1,0 +1,12 @@
+declare aa, integer
+declare bb, integer
+declare cc, integer
+store 5, cc
+declare ff, real
+store 1.1, ff
+declare ee, real
+declare gg, integer
+store 2, gg
+declare nn, integer
+declare hh, char
+store ', hh
