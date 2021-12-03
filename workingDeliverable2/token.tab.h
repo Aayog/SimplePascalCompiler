@@ -76,13 +76,19 @@ extern int yydebug;
     CHARLITERAL = 282,
     REALLITERAL = 283,
     BOOLEANLITERAL = 284,
-    APOSTROPHE = 285,
-    LT = 286,
-    GT = 287,
-    EQ = 288,
-    LE = 289,
-    GE = 290,
-    NE = 291
+    NOTOP = 285,
+    ANDOP = 286,
+    OROP = 287,
+    EQU = 288,
+    NEQU = 289,
+    GT = 290,
+    LT = 291,
+    GEQUAL = 292,
+    LEQUAL = 293,
+    IF = 294,
+    THEN = 295,
+    WHILE = 296,
+    DO = 297
   };
 #endif
 
