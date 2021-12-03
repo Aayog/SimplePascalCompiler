@@ -44,6 +44,7 @@ void yyerror(const char []);
 %type <sval>expression
 %type <sval>expr
 %type <sval>bexpr
+%type <sval>bfactor
 %type <sval>term
 %type <sval>add_op
 %type <sval>sub_op
@@ -107,8 +108,8 @@ bexpr : bterm {$$ = strdup($1);}
 bterm : bterm AND bfactor {strcpy($$,gen_infix($1,$2,$3));}
         | bfactor {strcpy($$, $1);}
 bfactor : NOT bFactor {strcpy($$,gen_infix_not($1,$2));}
-        | true {strcpy ($$, "true")}
-        | false {strcpy ($$, "false")}
+        | "true" {strcpy ($$, "true")}
+        | "false" {strcpy ($$, "false")}
 
 term      :	lparen expression rparen   {strcpy($$,$2);}
 		;
