@@ -130,3 +130,17 @@ char * gen_infix(char[] operand1, char* op, char[] operand2)
   outFile << tempop << " " << op1 << ", " << op2 << ", " << tempname << std::endl;
   return (tempname);
 }
+
+char *gen_infix_not(char operand1[]){
+  char[] type1 = getOpType(operand1);
+    if (type1 == "boolean") {
+        char *temp = getTemp(type1);
+        symbol_table[temp] = "boolean";
+        outFile << "not " << operand1 << ", " << temp << std::endl;
+        return temp;
+    }
+    else {
+      error("NOT OPERATION NEEDS A BOOLEAN OPERAND");
+      }
+  return operand1;
+}

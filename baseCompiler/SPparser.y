@@ -42,6 +42,7 @@ void yyerror(const char []);
 %type <sval>ident
 %type <sval>expression
 %type <sval>expr
+%type <sval>bexpr
 %type <sval>term
 %type <sval>add_op
 %type <sval>sub_op
@@ -99,6 +100,15 @@ expr       :    term {$$ = strdup($1);}
 		| expr sub_op term {strcpy($$,gen_infix($1,$2,$3));}
 		| {error("EXPRESSION EXPECTED, BUT FOUND");}
 		;
+bexpr : bterm {$$ = strdup($1);}
+                | bexpr OR bterm
+
+bterm : bterm and bfactor {strcpy($$,gen_infix($1,$2,$3));}
+        | bfactor {strcpy($$, $1);}
+bfactor : not bFactor {strcpy($$,gen_infix_not($1,$2));}
+        | true {strcpy ($$, "true")}
+        | false {strcpy ($$, "false")}
+
 term      :	lparen expression rparen   {strcpy($$,$2);}
 		;
 term      :	ident      {strcpy($$,$1);}
