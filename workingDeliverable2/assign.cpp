@@ -11,8 +11,9 @@ void assign (char target[], char source[])
      /* Generate code for assignment. */
      if (st.exists(target)) {
      	if (st.getType(target) == "char") {
-     		st.insert(source.length(), 1, '\'');
-     		st.insert(0, 1, '\'');
+			source = '\'' + source + '\'';
+     		// st.insert(source.length(), 1, '\'');
+     		// st.insert(0, 1, '\'');
      	}
      	st.modify(target, source, st.getType(target));
      	outFile << "store " << source << ", " << target << std::endl;
