@@ -76,8 +76,6 @@ extern int yydebug;
     CHARLITERAL = 282,
     REALLITERAL = 283,
     BOOLEANLITERAL = 284,
-<<<<<<< HEAD
-=======
     NOTOP = 285,
     ANDOP = 286,
     OROP = 287,
@@ -91,7 +89,6 @@ extern int yydebug;
     THEN = 295,
     WHILE = 296,
     DO = 297
->>>>>>> 731f4295b0b13ff742a8e8e3445793faf9cab0a9
   };
 #endif
 
