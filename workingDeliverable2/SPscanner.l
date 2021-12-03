@@ -68,7 +68,7 @@ id              [a-zA-Z_][a-zA-Z0-9_]*
 {andop}                                         {return ANDOP;}
 {orop}                                          {return OROP;}
 {equ}                                           {return EQUAL;}
-{neq}                                           {return NOTEQUAL;}
+{nequ}                                          {return NOTEQUAL;}
 {gt}                                            {return GREATERTHAN;}
 {lt}                                            {return LESSTHAN;}
 {gequal}                                        {return GEQUAL;}
