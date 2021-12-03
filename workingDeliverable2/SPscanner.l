@@ -21,16 +21,23 @@ minusop  	[-]
 multop      [*]
 divop       [/]
 modop       [%]
+notop       [Nn][Oo][Tt]
+andop       [Aa][Nn][Dd]
+orop        [Oo][Rr]
+equ         [\=]
+nequ        [<][>]
+gt          [>]
+lt          [<]
+gequal      [>][=]
+lequal      [<][=]
+if          [Ii][Ff]
+then        [Tt][Hh][Ee][Nn]
+while       [Ww][Hh][Ii][Ll][Ee]
+do          [Dd][Oo]
 intliteral      (-?[1-9]{digit}*)
 realliteral     ([+-]?([0-9]*[.])?[0-9]+)
 charliteral     ([a-zA-Z0-9])
 booleanliteral  ([Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee])
-lt              [<]
-gt              [>]
-eq              [=]
-le              [<][=]
-ge              [>][=]
-ne              [<][>]
 id              [a-zA-Z_][a-zA-Z0-9_]*
 %%
 [ \t]+                                          {/* do nothing */}
@@ -46,9 +53,9 @@ id              [a-zA-Z_][a-zA-Z0-9_]*
 [Rr][Ee][Aa][Dd]                                {return READ;}
 [Ww][Rr][Ii][Tt][Ee]                            {return WRITE;}
 {comma}                                         {return COMMA;}
-{period}					{return PERIOD;}
+{period}					                    {return PERIOD;}
 {semicolon}                                     {return SEMICOLON;}
-{colon}						{return COLON;}
+{colon}						                    {return COLON;}
 {lparen}                                        {return LPAREN;}
 {rparen}                                        {return RPAREN;}
 {assignop}                                      {return ASSIGNOP;}
@@ -57,17 +64,24 @@ id              [a-zA-Z_][a-zA-Z0-9_]*
 {multop}                                        {return MULTOP;}
 {divop}                                         {return DIVOP;}
 {modop}                                         {return MODOP;}
+{notop}                                         {return NOTOP;}
+{andop}                                         {return ANDOP;}
+{orop}                                          {return OROP;}
+{equ}                                           {return EQUAL;}
+{neq}                                           {return NOTEQUAL;}
+{gt}                                            {return GREATERTHAN;}
+{lt}                                            {return LESSTHAN;}
+{gequal}                                        {return GEQUAL;}
+{lequal}                                        {return LEQUAL;}
+{if}                                            {return IF;}
+{then}                                          {return THEN;}
+{while}                                         {return WHILE;}
+{do}                                            {return DO;}
 {apostrophe}                                    {return APOSTROPHE;}
 {intliteral}                                    {yylval.sval = strdup(yytext); return INTLITERAL;}
 {realliteral}                                   {yylval.sval = strdup(yytext); return REALLITERAL;}
 {charliteral}                                   {yylval.sval = strdup(yytext); return CHARLITERAL;}
 {booleanliteral}                                {yylval.sval = strdup(yytext); return BOOLEANLITERAL;}
-{le}                                            {return LE; } 
-{ge}                                            {return GE; } 
-{lt}                                            {return LT; } 
-{gt}                                            {return GT; } 
-{eq}                                            {return EQ; } 
-{ne}                                            {return NE; } 
 {id}                                            {yylval.sval = strdup(yytext); return ID;}
 %%
 
