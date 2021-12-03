@@ -6,16 +6,8 @@
 
 extern std::ofstream outFile;
 extern SymbolTable st;
-
-int stringcmp(std::string a, std::string b) {
-  if (a == b) {
-    return 0;
-  } else if (a < b){
-    return -1;
-  } else {
-    return 1;
-  }
-}
+void error(std::string msg);
+int stringcmp(std::string a, std::string b);
 
 char * getTemp(std::string type) {
 	// converting the previous iteration where only an int is needed
@@ -154,4 +146,18 @@ std::string gen_infix_not(std::string operand1){
       error("NOT OPERATION NEEDS A BOOLEAN OPERAND");
       }
   return operand1;
+}
+
+void error(std::string msg) {
+  throw msg;
+}
+
+int stringcmp(std::string a, std::string b) {
+  if (a == b) {
+    return 0;
+  } else if (a < b){
+    return -1;
+  } else {
+    return 1;
+  }
 }
