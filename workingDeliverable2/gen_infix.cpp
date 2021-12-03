@@ -49,10 +49,10 @@ char * getTemp(std::string type) {
 std::string getOpType(std::string operand) {
   if (st.exists(operand)){
     return st.getType(operand);
-  } else {
-    std::string err = "ERROR OPERAND NOT FOUND";
-    error(err);
   }
+  std::string err = "ERROR OPERAND NOT FOUND";
+  error(err);
+  return nullptr;
   /* In theory we can do this because we add every literal to the symbol table
    * If this is not working, then the symbol table is not handling non std::string values very well
    *
