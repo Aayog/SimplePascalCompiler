@@ -138,7 +138,7 @@ std::string gen_infix_not(std::string operand1){
   std::string type1 = getOpType(operand1);
     if (type1 == "boolean") {
         std::string temp = getTemp(type1);
-        st.insert(temp, "boolean");
+        // st.insert(temp,  "boolean");
         // symbol_table[temp] = "boolean";
         outFile << "not " << operand1 << ", " << temp << std::endl;
         return temp;
