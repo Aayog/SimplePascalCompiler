@@ -88,8 +88,8 @@ std::ofstream outFile;
 void assign (char [], char []);
 void decl_id (char [], char []);
 void finish();
-string gen_infix(char [], char [], char []);
-string gen_infix_not(char [], char []);
+char* gen_infix(char [], char [], char []);
+char* gen_infix_not(char [], char []);
 void read_id (char []);
 void write_expr(char [], char []);
 void error(const char []);
@@ -1614,13 +1614,13 @@ yyreduce:
 
   case 49:
 #line 114 "SPparser.y"
-    {strcpy ((yyval.sval), "true")}
+    {(yyval.sval)="true";}
 #line 1619 "SPparser.tab.c"
     break;
 
   case 50:
 #line 115 "SPparser.y"
-    {strcpy ((yyval.sval), "false")}
+    {(yyval.sval)= "false";}
 #line 1625 "SPparser.tab.c"
     break;
 
