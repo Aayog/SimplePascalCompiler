@@ -8,10 +8,10 @@ extern std::ofstream outFile;
 extern SymbolTable st;
 void error(std::string msg);
 int stringcmp(std::string a, std::string b);
-	static int max_temp_int = 0;
-	static int max_temp_real = 0;
-	static int max_temp_bool = 0;
-	static int max_temp_char = 0;
+static int max_temp_int = 0;
+static int max_temp_real = 0;
+static int max_temp_bool = 0;
+static int max_temp_char = 0;
 char * getTemp(std::string type) {
 	// converting the previous iteration where only an int is needed
 	// into all data types
@@ -129,7 +129,7 @@ std::string gen_infix(std::string operand1, std::string op, std::string operand2
 
   std::string tempop = getOp(intOps, op);
   std::string tempname = getTemp(type1);
-  sprintf(tempname, "&tempi%d" ,max_temp);
+  // sprintf(tempname, "&tempi%d" ,max_temp);
   outFile << tempop << " " << op1 << ", " << op2 << ", " << tempname << std::endl;
   return (tempname);
 }
