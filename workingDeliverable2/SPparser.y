@@ -104,9 +104,9 @@ expr       :    term {$$ = strdup($1);}
 bexpr : bterm {$$ = strdup($1);}
                 | bexpr OR bterm
 
-bterm : bterm and bfactor {strcpy($$,gen_infix($1,$2,$3));}
+bterm : bterm AND bfactor {strcpy($$,gen_infix($1,$2,$3));}
         | bfactor {strcpy($$, $1);}
-bfactor : not bFactor {strcpy($$,gen_infix_not($1,$2));}
+bfactor : NOT bFactor {strcpy($$,gen_infix_not($1,$2));}
         | true {strcpy ($$, "true")}
         | false {strcpy ($$, "false")}
 

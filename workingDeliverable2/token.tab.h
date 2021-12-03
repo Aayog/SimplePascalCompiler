@@ -84,7 +84,7 @@ extern int yydebug;
     EQ   = 290,
     LE   = 291,
     GE   = 292,
-    NE   = 292,
+    NE   = 293,
   };
 #endif
 
