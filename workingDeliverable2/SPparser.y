@@ -104,11 +104,11 @@ expr       :    term {$$ = strdup($1);}
 		| {error("EXPRESSION EXPECTED, BUT FOUND");}
 		;
 bexpr : bterm {$$ = strdup($1);}
-                | bexpr "or" bterm  {strcpy($$,gen_infix($1,$2,$3));}
+                | bexpr "or" bterm  {strcpy($$,gen_infix($1,"or",$3));}
 
-bterm : bterm "and" bfactor {strcpy($$,gen_infix($1,$2,$3));}
+bterm : bterm "and" bfactor {strcpy($$,gen_infix($1,"and",$3));}
         | bfactor {strcpy($$, $1);}
-bfactor : "not" bfactor {strcpy($$,gen_infix_not($1,$2));}
+bfactor : "not" bfactor {strcpy($$,gen_infix_not("not",$2));}
         | "true" {strcpy ($$, "true")}
         | "false" {strcpy ($$, "false")}
 
