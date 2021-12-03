@@ -17,7 +17,7 @@ int stringcmp(std::string a, std::string b) {
   }
 }
 
-char * getTemp(std::string type[]) {
+char * getTemp(std::string type) {
 	// converting the previous iteration where only an int is needed
 	// into all data types
 	static int max_temp_int = 0;
@@ -114,7 +114,7 @@ std::string coerceType(std::string operand, std::string type){
 
 }
 
-char * gen_infix(std::string operand1, std::string op, std::string operand2)
+std::string gen_infix(std::string operand1, std::string op, std::string operand2)
 {  
   // char tempop[8];
   // this is a placeholeder, need to design a way to get the type from operands!
@@ -142,10 +142,10 @@ char * gen_infix(std::string operand1, std::string op, std::string operand2)
   return (tempname);
 }
 
-char *gen_infix_not(char operand1[]){
+std::string gen_infix_not(std::string operand1){
   std::string type1 = getOpType(operand1);
     if (type1 == "boolean") {
-        char *temp = getTemp(type1);
+        std::string temp = getTemp(type1);
         symbol_table[temp] = "boolean";
         outFile << "not " << operand1 << ", " << temp << std::endl;
         return temp;
