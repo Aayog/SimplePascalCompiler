@@ -107,7 +107,7 @@ bexpr : bterm {$$ = strdup($1);}
 
 bterm : bterm AND bfactor {strcpy($$,gen_infix($1,$2,$3));}
         | bfactor {strcpy($$, $1);}
-bfactor : NOT bFactor {strcpy($$,gen_infix_not($1,$2));}
+bfactor : NOT bfactor {strcpy($$,gen_infix_not($1,$2));}
         | "true" {strcpy ($$, "true")}
         | "false" {strcpy ($$, "false")}
 
