@@ -101,6 +101,7 @@ expr       :    term {$$ = strdup($1);}
 		| expr mod_op term {strcpy($$,gen_infix($1,$2,$3));}
 		| expr add_op term {strcpy($$,gen_infix($1,$2,$3));}
 		| expr sub_op term {strcpy($$,gen_infix($1,$2,$3));}
+		| bexpr {$$ = strdup($1);}
 		| {error("EXPRESSION EXPECTED, BUT FOUND");}
 		;
 bexpr : bterm {$$ = strdup($1);}
