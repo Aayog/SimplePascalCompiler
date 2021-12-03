@@ -8,14 +8,14 @@ extern std::ofstream outFile;
 extern SymbolTable st;
 void error(std::string msg);
 int stringcmp(std::string a, std::string b);
-
-char * getTemp(std::string type) {
-	// converting the previous iteration where only an int is needed
-	// into all data types
 	static int max_temp_int = 0;
 	static int max_temp_real = 0;
 	static int max_temp_bool = 0;
 	static int max_temp_char = 0;
+char * getTemp(std::string type) {
+	// converting the previous iteration where only an int is needed
+	// into all data types
+
 	static char tempname[30];
 
 	if (stringcmp("integer", type) == 0) {
@@ -84,12 +84,12 @@ std::string getOp(bool intOps, std::string op) {
       error("MODULUS NOT ALLOWED WITH REAL OPERANDS");
     }
   }
-  error("UNKNOWN OPERATION: " + std::std::string(op));
+  error("UNKNOWN OPERATION: " + std::string(op));
   return nullptr;
 }
 
 std::string coerceType(std::string operand, std::string type){
-  std::string currType = st.getType(operand)
+  std::string currType = st.getType(operand);
   if (stringcmp(currType, type) != 0){
     if ((stringcmp(currType, "integer") == 0 || stringcmp(currType, "boolean") == 0)  && stringcmp("real", type) == 0) {
        std::string temp = getTemp(type);
