@@ -25,9 +25,6 @@ intliteral      (-?[1-9]{digit}*)
 realliteral     ([+-]?([0-9]*[.])?[0-9]+)
 charliteral     ([a-zA-Z0-9])
 booleanliteral  ([Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee])
-and             [&&]
-or              [||]
-not             [!]
 LT              [<]
 GT              [<]
 EQ              [=]
@@ -65,9 +62,6 @@ id              [a-zA-Z_][a-zA-Z0-9_]*
 {realliteral}                                   {yylval.sval = strdup(yytext); return REALLITERAL;}
 {charliteral}                                   {yylval.sval = strdup(yytext); return CHARLITERAL;}
 {booleanliteral}                                {yylval.sval = strdup(yytext); return BOOLEANLITERAL;}
-{and}                                           {return AND;}
-{or}                                            {return OR; } 
-{not}                                           {return NOT;}
 {LT}                                            {return LT; } 
 {GT}                                            {return GT; } 
 {EQ}                                            {return EQ; } 

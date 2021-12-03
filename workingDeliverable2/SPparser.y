@@ -36,7 +36,7 @@ void yyerror(const char []);
 %token LPAREN RPAREN COMMA PERIOD SEMICOLON COLON PLUSOP MINUSOP ID
 %token DIVOP MULTOP MODOP CHAR REAL BOOLEAN CHARLITERAL REALLITERAL
 %token BOOLEANLITERAL APOSTROPHE  
-%token LT GT  EQ LE GE NE AND OR NOT 
+%token LT GT  EQ LE GE NE
 
 %left PLUSOP MINUSOP DIVOP MULTOP MODOP
 
@@ -104,11 +104,11 @@ expr       :    term {$$ = strdup($1);}
 		| {error("EXPRESSION EXPECTED, BUT FOUND");}
 		;
 bexpr : bterm {$$ = strdup($1);}
-                | bexpr OR bterm
+                | bexpr "or" bterm  {strcpy($$,gen_infix($1,$2,$3));}
 
-bterm : bterm AND bfactor {strcpy($$,gen_infix($1,$2,$3));}
+bterm : bterm "and" bfactor {strcpy($$,gen_infix($1,$2,$3));}
         | bfactor {strcpy($$, $1);}
-bfactor : NOT bfactor {strcpy($$,gen_infix_not($1,$2));}
+bfactor : "not" bfactor {strcpy($$,gen_infix_not($1,$2));}
         | "true" {strcpy ($$, "true")}
         | "false" {strcpy ($$, "false")}
 
