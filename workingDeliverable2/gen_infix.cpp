@@ -1,5 +1,6 @@
 #include <ctype.h>
 #include <string>
+#include <cstring>
 #include <iostream>
 #include <fstream>
 #include "symbol_table.h"
