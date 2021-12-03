@@ -1,6 +1,5 @@
 #include <ctype.h>
 #include <string>
-#include <cstring>
 #include <iostream>
 #include <fstream>
 #include "symbol_table.h"
@@ -16,19 +15,19 @@ char * getTemp(std::string type[]) {
 	static int max_temp_char = 0;
 	static char tempname[30];
 
-	if (strcmp("integer", type) == 0) {
+	if (stringcmp("integer", type) == 0) {
 	    max_temp_int++;
 	    sprintf(tempname, "&tempi%d", max_temp_int);
 	    outFile << "declare " << tempname << ", integer" << std::endl;
-	} else if (strcmp("real", type) == 0) {
+	} else if (stringcmp("real", type) == 0) {
 	    max_temp_real++;
             sprintf(tempname, "&tempr%d", max_temp_real);
             outFile << "declare " << tempname << ", real" << std::endl;
-	} else if (strcmp("boolean", type) == 0) {
+	} else if (stringcmp("boolean", type) == 0) {
 	    max_temp_bool++;
             sprintf(tempname, "&tempb%d", max_temp_bool);
             outFile << "declare " << tempname << ", boolean" << std::endl;
-	} else if (strcmp("char", type) == 0) {
+	} else if (stringcmp("char", type) == 0) {
 	    max_temp_char++;
             sprintf(tempname, "&tempc%d", max_temp_char);
             outFile << "declare " << tempname << ", char" << std::endl;
@@ -56,30 +55,38 @@ std::string getOpType(std::string operand) {
    *
    */ 
 }
-
+int stringcmp(string a, string b) {
+  if (a == b) {
+    return 0;
+  } else if (a < b){
+    return -1;
+  } else {
+    return 1;
+  }
+}
 std::string getOp(bool intOps, std::string op) {
   if (intOps) {
-    if (strcmp("Add", op) == 0) {
+    if (stringcmp("Add", op) == 0) {
       return "iadd";
-    } else if (strcmp("Sub", op) == 0) {
+    } else if (stringcmp("Sub", op) == 0) {
       return "isub";
-    } else if (strcmp("Mul", op) == 0) {
+    } else if (stringcmp("Mul", op) == 0) {
       return "imult";
-    } else if (strcmp("Div", op) == 0) {
+    } else if (stringcmp("Div", op) == 0) {
       return "idiv";
-    } else if (strcmp("Mod", op) == 0) {
+    } else if (stringcmp("Mod", op) == 0) {
       return "imod";
     }
   } else {
-    if (strcmp("Add", op) == 0) {
+    if (stringcmp("Add", op) == 0) {
       return "radd";
-    } else if (strcmp("Sub", op) == 0) {
+    } else if (stringcmp("Sub", op) == 0) {
       return "rsub";
-    } else if (strcmp("Mul", op) == 0) {
+    } else if (stringcmp("Mul", op) == 0) {
       return "rmult";
-    } else if (strcmp("Div", op) == 0) {
+    } else if (stringcmp("Div", op) == 0) {
       return "rdiv";
-    } else if (strcmp("Mod", op) == 0) {
+    } else if (stringcmp("Mod", op) == 0) {
       error("MODULUS NOT ALLOWED WITH REAL OPERANDS");
     }
   }
@@ -89,12 +96,12 @@ std::string getOp(bool intOps, std::string op) {
 
 std::string coerceType(std::string operand, std::string type){
   std::string currType = st.getType(operand)
-  if (strcmp(currType, type) != 0){
-    if ((strcmp(currType, "integer") == 0 || strcmp(currType, "boolean") == 0)  && strcmp("real", type) == 0) {
+  if (stringcmp(currType, type) != 0){
+    if ((stringcmp(currType, "integer") == 0 || stringcmp(currType, "boolean") == 0)  && stringcmp("real", type) == 0) {
        std::string temp = getTemp(type);
        outFile << "itor " << operand << ", " << temp << std::endl;
        return temp;
-    } else if (strcmp(currType, "real") == 0 && strcmp("integer", type) == 0) {
+    } else if (stringcmp(currType, "real") == 0 && stringcmp("integer", type) == 0) {
 	std::string temp = getTemp(type);
 	outFile << "rtoi " << operand << ", " << temp << std::endl;
 	return temp;
@@ -114,12 +121,12 @@ char * gen_infix(std::string operand1, std::string op, std::string operand2)
   auto type2 = getOpType(operand2);
   std::string op1 = operand1;
   std::string op2 = operand2;
-  if (strcmp("real", type1) == 0 && strcmp("integer", type2) == 0) {
+  if (stringcmp("real", type1) == 0 && stringcmp("integer", type2) == 0) {
 	// want to change type to reals
     type2 = "real";
     op2 = coerceType(operand2, type2);
     intOps = false;
-  } else if (strcmp("integer", type1) == 0 && strcmp("real", type2) == 0) {
+  } else if (stringcmp("integer", type1) == 0 && stringcmp("real", type2) == 0) {
 	// want to change type to reals
     type1 = "real";
     op1 = coerceType(operand1, type1);
