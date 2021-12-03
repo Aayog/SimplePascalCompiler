@@ -108,8 +108,8 @@ char * gen_infix(char[] operand1, char* op, char[] operand2)
   // char tempop[8];
   // this is a placeholeder, need to design a way to get the type from operands!
   bool intOps = true;  //true if int ops, false if real ops
-  char* type1 = getOpType(operand1);
-  char* type2 = getOpType(operand2);
+  auto type1 = getOpType(operand1);
+  auto type2 = getOpType(operand2);
   char* op1 = operand1;
   char* op2 = operand2;
   if (strcmp("real", type1) == 0 && strcmp("integer", type2) == 0) {
