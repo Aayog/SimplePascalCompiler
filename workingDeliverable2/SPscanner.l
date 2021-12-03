@@ -28,9 +28,9 @@ booleanliteral  ([Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee])
 lt              [<]
 gt              [>]
 eq              [=]
-le              [<=]
-ge              [>=]
-ne              [<>]
+le              [<][=]
+ge              [>][=]
+ne              [<][>]
 id              [a-zA-Z_][a-zA-Z0-9_]*
 %%
 [ \t]+                                          {/* do nothing */}
