@@ -7,7 +7,7 @@
 extern std::ofstream outFile;
 extern SymbolTable st;
 
-int stringcmp(string a, string b) {
+int stringcmp(std::string a, std::string b) {
   if (a == b) {
     return 0;
   } else if (a < b){
