@@ -43,5 +43,5 @@ string SymbolTable::getType(string id) {
 
 bool SymbolTable::insert(string id, string value, string type) {
 	data[id] = Node(id, value, type);
-	return true;
+	return false;
 }

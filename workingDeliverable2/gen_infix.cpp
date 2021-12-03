@@ -27,7 +27,7 @@ char * getTemp(const char type[]) {
             sprintf(tempname, "&tempb%d", max_temp_bool);
             outFile << "declare " << tempname << ", boolean" << std::endl;
 	} else if (strcmp("char", type) == 0) {
-	    max_temp_chat++;
+	    max_temp_char++;
             sprintf(tempname, "&tempc%d", max_temp_char);
             outFile << "declare " << tempname << ", char" << std::endl;
 	}
