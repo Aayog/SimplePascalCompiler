@@ -1,11 +1,12 @@
 #include <ctype.h>
-#include <string>
+#include <std::string>
 #include <iostream>
 #include <fstream>
 #include "symbol_table.h"
+
 extern std::ofstream outFile;
 extern SymbolTable st;
-char * getTemp(string type[]) {
+char * getTemp(std::string type[]) {
 	// converting the previous iteration where only an int is needed
 	// into all data types
 	static int max_temp_int = 0;
@@ -42,7 +43,7 @@ char * getTemp(string type[]) {
  * 
  */
 
-string getOpType(string operand) {
+std::string getOpType(std::string operand) {
   if (st.exists(operand)){
     return st.getType(operand);
   } else {
@@ -50,12 +51,12 @@ string getOpType(string operand) {
     error(err);
   }
   /* In theory we can do this because we add every literal to the symbol table
-   * If this is not working, then the symbol table is not handling non string values very well
+   * If this is not working, then the symbol table is not handling non std::string values very well
    *
    */ 
 }
 
-string getOp(bool intOps, string op) {
+std::string getOp(bool intOps, std::string op) {
   if (intOps) {
     if (strcmp("Add", op) == 0) {
       return "iadd";
@@ -81,19 +82,19 @@ string getOp(bool intOps, string op) {
       error("MODULUS NOT ALLOWED WITH REAL OPERANDS");
     }
   }
-  error("UNKNOWN OPERATION: " + std::string(op));
+  error("UNKNOWN OPERATION: " + std::std::string(op));
   return nullptr;
 }
 
-string coerceType(string operand, string type){
-  string currType = st.getType(operand)
+std::string coerceType(std::string operand, std::string type){
+  std::string currType = st.getType(operand)
   if (strcmp(currType, type) != 0){
     if ((strcmp(currType, "integer") == 0 || strcmp(currType, "boolean") == 0)  && strcmp("real", type) == 0) {
-       string temp = getTemp(type);
+       std::string temp = getTemp(type);
        outFile << "itor " << operand << ", " << temp << std::endl;
        return temp;
     } else if (strcmp(currType, "real") == 0 && strcmp("integer", type) == 0) {
-	string temp = getTemp(type);
+	std::string temp = getTemp(type);
 	outFile << "rtoi " << operand << ", " << temp << std::endl;
 	return temp;
     }
@@ -103,15 +104,15 @@ string coerceType(string operand, string type){
 
 }
 
-char * gen_infix(string operand1, string op, string operand2)
+char * gen_infix(std::string operand1, std::string op, std::string operand2)
 {  
   // char tempop[8];
   // this is a placeholeder, need to design a way to get the type from operands!
   bool intOps = true;  //true if int ops, false if real ops
   auto type1 = getOpType(operand1);
   auto type2 = getOpType(operand2);
-  string op1 = operand1;
-  string op2 = operand2;
+  std::string op1 = operand1;
+  std::string op2 = operand2;
   if (strcmp("real", type1) == 0 && strcmp("integer", type2) == 0) {
 	// want to change type to reals
     type2 = "real";
@@ -124,15 +125,15 @@ char * gen_infix(string operand1, string op, string operand2)
     intOps = false;
   }
 
-  string tempop = getOp(intOps, op);
-  string tempname = getTemp(type1);
+  std::string tempop = getOp(intOps, op);
+  std::string tempname = getTemp(type1);
   sprintf(tempname, "&tempi%d" ,max_temp);
   outFile << tempop << " " << op1 << ", " << op2 << ", " << tempname << std::endl;
   return (tempname);
 }
 
 char *gen_infix_not(char operand1[]){
-  string type1 = getOpType(operand1);
+  std::string type1 = getOpType(operand1);
     if (type1 == "boolean") {
         char *temp = getTemp(type1);
         symbol_table[temp] = "boolean";
