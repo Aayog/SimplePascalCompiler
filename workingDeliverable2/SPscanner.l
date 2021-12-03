@@ -25,12 +25,12 @@ intliteral      (-?[1-9]{digit}*)
 realliteral     ([+-]?([0-9]*[.])?[0-9]+)
 charliteral     ([a-zA-Z0-9])
 booleanliteral  ([Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee])
-LT              [<]
-GT              [<]
-EQ              [=]
-LE              [<=]
-GE              [>=]
-NE              [<>]
+lt              [<]
+gt              [>]
+eq              [=]
+le              [<=]
+ge              [>=]
+ne              [<>]
 id              [a-zA-Z_][a-zA-Z0-9_]*
 %%
 [ \t]+                                          {/* do nothing */}
@@ -62,12 +62,12 @@ id              [a-zA-Z_][a-zA-Z0-9_]*
 {realliteral}                                   {yylval.sval = strdup(yytext); return REALLITERAL;}
 {charliteral}                                   {yylval.sval = strdup(yytext); return CHARLITERAL;}
 {booleanliteral}                                {yylval.sval = strdup(yytext); return BOOLEANLITERAL;}
-{LT}                                            {return LT; } 
-{GT}                                            {return GT; } 
-{EQ}                                            {return EQ; } 
-{LE}                                            {return LE; } 
-{GE}                                            {return GE; } 
-{NE}                                            {return NE; } 
+{le}                                            {return LE; } 
+{ge}                                            {return GE; } 
+{lt}                                            {return LT; } 
+{gt}                                            {return GT; } 
+{eq}                                            {return EQ; } 
+{ne}                                            {return NE; } 
 {id}                                            {yylval.sval = strdup(yytext); return ID;}
 %%
 
