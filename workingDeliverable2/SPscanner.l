@@ -25,6 +25,15 @@ intliteral      (-?[1-9]{digit}*)
 realliteral     ([+-]?([0-9]*[.])?[0-9]+)
 charliteral     ([a-zA-Z0-9])
 booleanliteral  ([Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee])
+and             [&&]
+or              [||]
+not             [!]
+LT              [<]
+GT              [<]
+EQ              [=]
+LE              [<=]
+GE              [>=]
+NE              [<>]
 id              [a-zA-Z_][a-zA-Z0-9_]*
 %%
 [ \t]+                                          {/* do nothing */}
