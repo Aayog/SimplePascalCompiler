@@ -76,15 +76,13 @@ extern int yydebug;
     CHARLITERAL = 282,
     REALLITERAL = 283,
     BOOLEANLITERAL = 284,
-    AND  = 285,
-    OR   = 286,
-    NOT  = 287,
-    LT   = 288,
-    GT   = 289,
-    EQ   = 290,
-    LE   = 291,
-    GE   = 292,
-    NE   = 293,
+    APOSTROPHE = 285,
+    LT = 286,
+    GT = 287,
+    EQ = 288,
+    LE = 289,
+    GE = 290,
+    NE = 291
   };
 #endif
 
@@ -92,7 +90,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 27 "SPparser.y"
+#line 29 "SPparser.y"
 
        int ival;
        char * sval;
@@ -101,7 +99,7 @@ union YYSTYPE
 	   float rval;
        
 
-#line 96 "token.tab.h"
+#line 103 "token.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
