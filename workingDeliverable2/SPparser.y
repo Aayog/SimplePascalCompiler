@@ -7,178 +7,222 @@
 #include <iostream>
 #include <fstream>
 #include "symbol_table.h"
+#include "labelTracker.h"
 
 extern "C" int yylex();
 extern "C" int yyparse();
 extern FILE * yyin;
 
 SymbolTable st;
+labelTracker lt;
 int line_no = 1;
 char type[10];
 std::ofstream outFile;
-void assign (char[], char[]);
-void decl_id (char[], char[]);
+void assign (char [], char []);
+void decl_id (char [], char []);
 void finish();
-char* gen_infix(char[], char[], char[]);
-char* gen_infix_not(char[], char[]);
-void read_id (char[]);
-void write_expr(char[], char[]);
+char * gen_infix(char [], char [], char []);
+char * gen_bool(char [], char [], char []);
+char * gen_bool(char []);
+void read_id (char []);
+void write_expr(char [], char []);
+void while_expr();
+void while_end_expr(char []);
+void end_expr();
+void if_expr(char []);
+void if_end();
 void error(const char []);
 void yyerror(const char []);
 %}
 %union{
        int ival;
        char * sval;
-	   bool bval;
-	   char cval;
-	   float rval;
+           bool bval;
+           char cval;
+           float rval;
        }
 %token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER INTLITERAL
 %token LPAREN RPAREN COMMA PERIOD SEMICOLON COLON PLUSOP MINUSOP ID
 %token DIVOP MULTOP MODOP CHAR REAL BOOLEAN CHARLITERAL REALLITERAL
-%token BOOLEANLITERAL APOSTROPHE  
-%token LT GT  EQ LE GE NE
+%token BOOLEANLITERAL APOSTROPHE IF THEN LTHAN GTHAN GEQUAL LEQUAL
+%token EQUAL NEQUAL AND OR WHILE DO NOT TRUE FALSE
 
-%left PLUSOP MINUSOP DIVOP MULTOP MODOP
+%left PLUSOP MINUSOP DIVOP MULTOP MODOP AND NOT
 
 %type <sval>ident
 %type <sval>expression
 %type <sval>expr
-%type <sval>bexpr
-%type <sval>bfactor
-%type <sval>bterm
 %type <sval>term
 %type <sval>add_op
 %type <sval>sub_op
 %type <sval>div_op
 %type <sval>mult_op
 %type <sval>mod_op
+%type <sval>bexpr
+%type <sval>booleanexpr
+%type <sval>boolterm
+%type <sval>lthan
+%type <sval>gthan
+%type <sval>gequal
+%type <sval>lequal
+%type <sval>equal
+%type <sval>nequal
+%type <sval>and
+%type <sval>or
 
 %start system_goal
 %%
 
-program	    :	 PROGRAM {line_no++;} decl_section START {line_no++;} statement_list END PERIOD {line_no++;} 
-		;
+program     :    PROGRAM {line_no++;} decl_section START {line_no++;} statement_list END PERIOD {line_no++;}
+                ;
 decl_section  :  SEMICOLON {line_no++;}
-		| VAR {line_no++;} vars_section
-		;
+                | VAR {line_no++;} vars_section
+                ;
 vars_section:   variables
-		| vars_section variables
-		;
-variables   :	 INTEGER {strcpy(type, "integer");} d_list SEMICOLON {line_no++;}
-		 | CHAR {strcpy(type, "char");} d_list SEMICOLON {line_no++;}
-		 | REAL {strcpy(type, "real");} d_list SEMICOLON {line_no++;}
-		 | BOOLEAN {strcpy(type, "boolean");} d_list SEMICOLON {line_no++;}
-		;
+                | vars_section variables
+                ;
+variables   :    INTEGER {strcpy(type, "integer");} d_list SEMICOLON {line_no++;}
+                 | CHAR {strcpy(type, "char");} d_list SEMICOLON {line_no++;}
+                 | REAL {strcpy(type, "real");} d_list SEMICOLON {line_no++;}
+                 | BOOLEAN {strcpy(type, "boolean");} d_list SEMICOLON {line_no++;}
+                ;
 d_list      :  ident  { decl_id($1, type); }
-		 | d_list COMMA ident { decl_id($3, type);}
-		 | ident ASSIGNOP expression { decl_id($1, type); assign($1, $3); }
-		 | ident ASSIGNOP APOSTROPHE expression APOSTROPHE { decl_id($1, type); assign($1, $4); }
-	         | d_list COMMA ident ASSIGNOP expression { decl_id($3, type); assign($3,$5); }
-	         | d_list COMMA ident ASSIGNOP APOSTROPHE expression APOSTROPHE { decl_id($3, type); assign($3,$6); }
-		;
+                 | d_list COMMA ident { decl_id($3, type);}
+                 | ident ASSIGNOP expression { decl_id($1, type); assign($1, $3); }
+             | d_list COMMA ident ASSIGNOP expression { decl_id($3, type); assign($3,$5); }
+                ;
 statement_list  :   statement
                  |  statement_list statement
-		;
-statement  :	ident ASSIGNOP expression {assign($1,$3);} SEMICOLON {line_no++;}
-		;
-statement  :	READ lparen id_list rparen SEMICOLON {line_no++;}
-		;
-statement  :	WRITE lparen expr_list rparen SEMICOLON {line_no++;}
-		;
-statement  :    SEMICOLON {line_no++;}
-		;
-id_list    :	ident      {read_id($1);}
-  		| id_list COMMA ident {read_id($3);}
-		;
-expr_list  :	expression   {write_expr($1, type);}
-                | expr_list COMMA expression {write_expr($3, type);}
-		;
-expression :	expr   {strcpy($$,$1);}
                 ;
+statement  :    ident ASSIGNOP expression {assign($1,$3);} SEMICOLON {line_no++;}
+                ;
+statement  :    IF bexpr {if_expr($2);} THEN {line_no++;} START {line_no++;} statement_list END {if_end(); line_no++;}
+                ;
+statement : WHILE {while_expr();} bexpr {while_end_expr($3);} DO {line_no++;} START {line_no++;} statement_list END {end_expr(); line_no++;}
+        ;
+statement  :    READ lparen id_list rparen SEMICOLON {line_no++;}
+                ;
+statement  :    WRITE lparen expr_list rparen SEMICOLON {line_no++;}
+                ;
+statement  :    SEMICOLON {line_no++;}
+                ;
+id_list    :    ident      {read_id($1);}
+                | id_list COMMA ident {read_id($3);}
+                ;
+expr_list  :    expression   {write_expr($1, type);}
+                | expr_list COMMA expression {write_expr($3, type);}
+                ;
+expression :    expr   {strcpy($$,$1);}
+                ;
+bexpr      : booleanexpr {strcpy($$, $1);}
+        | bexpr and bexpr {strcpy($$, gen_bool($1, $2, $3));}
+        | bexpr or bexpr {strcpy($$, gen_bool($1, $2, $3));}
+        | NOT bexpr {strcpy($$, gen_bool($2));}
+        | LPAREN booleanexpr RPAREN {strcpy($$, $2);}
+                ;
+booleanexpr : boolterm {$$ = strdup($1);}
+        | bexpr nequal boolterm {strcpy($$, gen_bool($1, $2, $3));}
+        | bexpr lthan boolterm {strcpy($$, gen_bool($1, $2, $3));}
+        | bexpr gthan boolterm {strcpy($$, gen_bool($1, $2, $3));}
+        | bexpr gequal boolterm {strcpy($$, gen_bool($1, $2, $3));}
+        | bexpr lequal boolterm {strcpy($$, gen_bool($1, $2, $3));}
+        | bexpr equal boolterm {strcpy($$, gen_bool($1, $2, $3));}
+        ;
+boolterm : lparen bexpr rparen {strcpy($$, $2);}
+        ;
+boolterm : ident {strcpy($$, $1);}
+        ;
+boolterm : BOOLEANLITERAL {strcpy($$,strdup(yylval.sval)); strcpy(type, "boolean");}
+        ;
 expr       :    term {$$ = strdup($1);}
-		| expr div_op term {strcpy($$,gen_infix($1,$2,$3));}
-		| expr mult_op term {strcpy($$,gen_infix($1,$2,$3));}
-		| expr mod_op term {strcpy($$,gen_infix($1,$2,$3));}
-		| expr add_op term {strcpy($$,gen_infix($1,$2,$3));}
-		| expr sub_op term {strcpy($$,gen_infix($1,$2,$3));}
-		| bexpr {$$ = strdup($1);}
-		| {error("EXPRESSION EXPECTED, BUT FOUND");}
-		;
-bexpr : bterm {$$ = strdup($1);}
-                | bexpr "or" bterm  {strcpy($$,gen_infix($1,"or",$3));}
-
-bterm : bterm "and" bfactor {strcpy($$,gen_infix($1,"and",$3));}
-        | bfactor {strcpy($$, $1);}
-bfactor : "not" bfactor {strcpy($$,gen_infix_not("not",$2));}
-        | "true" {$$="true";}
-        | "false" {$$= "false";}
-
-term      :	lparen expression rparen   {strcpy($$,$2);}
-		;
-term      :	ident      {strcpy($$,$1);}
-		;
-term      :	INTLITERAL {strcpy($$,strdup(yylval.sval)); strcpy(type, "integer"); decl_id(yylval.sval, type);}
-		| REALLITERAL {strcpy($$,strdup(yylval.sval)); strcpy(type, "real"); decl_id(yyval.sval, type);}
-		| CHARLITERAL{strcpy($$, strdup(yylval.sval)); strcpy(type, "char"); decl_id(yyval.sval, type);}
-		| BOOLEANLITERAL {strcpy($$,strdup(yylval.sval)); strcpy(type, "boolean"); decl_id(yyval.sval, type);}
-		| {error("NUMERIC VALUE EXPECTED, BUT FOUND");}
-		;
-lparen    :	LPAREN
-		| {error("( EXPECTED , BUT FOUND");}
-		;
-rparen    :	RPAREN
-		| {error(") EXPECTED , BUT FOUND");}
-		;
-add_op    :	PLUSOP {strcpy ($$,"Add");}
-		;
-sub_op    :	MINUSOP {strcpy ($$,"Sub");}
-		;
-mod_op	  : MODOP {strcpy ($$,"Mod");}
-		;
-div_op	  : DIVOP {strcpy ($$,"Div");}
-		;
-mult_op	  : MULTOP {strcpy ($$,"Mult");}
-		;
-ident     :	ID {strcpy($$, yylval.sval);}
-		| {error("IDENTIFIER EXPECTED, BUT NOT FOUND");}
-		;
-system_goal :	program  { finish(); }
-		;
+                | expr div_op term {strcpy($$,gen_infix($1,$2,$3));}
+                | expr mult_op term {strcpy($$,gen_infix($1,$2,$3));}
+                | expr mod_op term {strcpy($$,gen_infix($1,$2,$3));}
+                | expr add_op term {strcpy($$,gen_infix($1,$2,$3));}
+                | expr sub_op term {strcpy($$,gen_infix($1,$2,$3));}
+                | {error("EXPRESSION EXPECTED, BUT FOUND");}
+                ;
+term      :     lparen expression rparen   {strcpy($$,$2);}
+                ;
+term      :     ident      {strcpy($$,$1);}
+                ;
+term      :     INTLITERAL {strcpy($$,strdup(yylval.sval)); strcpy(type, "integer"); }
+                | REALLITERAL {strcpy($$,strdup(yylval.sval)); strcpy(type, "real");}
+                | CHARLITERAL{strcpy($$, strdup(yylval.sval)); strcpy(type, "char");}
+                | BOOLEANLITERAL {strcpy($$,strdup(yylval.sval)); strcpy(type, "boolean");}
+                | {error("NUMERIC VALUE EXPECTED, BUT FOUND");}
+                ;
+lparen    :     LPAREN
+                | {error("( EXPECTED , BUT FOUND");}
+                ;
+rparen    :     RPAREN
+                | {error(") EXPECTED , BUT FOUND");}
+                ;
+add_op    :     PLUSOP {strcpy ($$,"Add");}
+                ;
+sub_op    :     MINUSOP {strcpy ($$,"Sub");}
+                ;
+mod_op    : MODOP {strcpy ($$,"Mod");}
+                ;
+div_op    : DIVOP {strcpy ($$,"Div");}
+                ;
+mult_op   : MULTOP {strcpy ($$,"Mult");}
+                ;
+nequal  :   NEQUAL {strcpy($$, "nequal");}
+        ;
+lthan   :   LTHAN {strcpy($$, "lthan");}
+        ;
+gthan    :   GTHAN {strcpy($$, "gthan");}
+        ;
+gequal  :   GEQUAL {strcpy($$, "gequal");}
+        ;
+lequal  :   LEQUAL {strcpy($$, "lequal");}
+        ;
+equal   :   EQUAL {strcpy($$, "equal");}
+        ;
+or     :   OR {strcpy($$, "or");}
+        ;
+and     :   AND {strcpy($$, "and");}
+        ;
+ident     :     ID {strcpy($$, yylval.sval);}
+                | {error("IDENTIFIER EXPECTED, BUT NOT FOUND");}
+                ;
+system_goal :   program  { finish(); }
+                ;
 %%
 int main( int argc, char **argv )
 {
-	char * loc;
-	if( argc != 2 )
-		std::cout << "Usage: SP inputfile\n";
-	else
-	{
-		std::string srcFilePath = argv[1]; // assume you are not mucking with pointers
-		yyin = fopen( *++argv, "r" );
-		if( yyin == NULL )
-		{
-			std::cout << "SP: Couldn't open " << *argv << std::endl;
-			exit( 1 );
-		}
-		
-		std::string fileName = srcFilePath.substr(0, srcFilePath.rfind('.'));
-		std::string asmFileName = fileName + ".asm";
+        char * loc;
+        if( argc != 2 )
+                std::cout << "Usage: SP inputfile\n";
+        else
+        {
+                std::string srcFilePath = argv[1]; // assume you are not mucking with pointers
+                yyin = fopen( *++argv, "r" );
+                if( yyin == NULL )
+                {
+                        std::cout << "SP: Couldn't open " << *argv << std::endl;
+                        exit( 1 );
+                }
 
-		outFile.open(asmFileName);
-		yyparse();
-		fclose( yyin );
-		outFile.close();
-	}
+                std::string fileName = srcFilePath.substr(0, srcFilePath.rfind('.'));
+                std::string asmFileName = fileName + ".asm";
+
+                outFile.open(asmFileName);
+                yyparse();
+                fclose( yyin );
+                outFile.close();
+        }
 }
 
 void error( const char msg[] )
 {
-	std::cout << "LINE " << line_no << " : " << msg << std::endl;
-	exit( -1 );
+        std::cout << "LINE " << line_no << " : " << msg << std::endl;
+        exit( -1 );
 }
 
 void yyerror(const char s[]) {
   std::cout << "EEK, parse error!  Message: " << s << std::endl;
   // might as well halt now:
   exit(-1);
-} 
+}

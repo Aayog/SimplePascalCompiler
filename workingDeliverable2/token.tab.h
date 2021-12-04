@@ -76,19 +76,22 @@ extern int yydebug;
     CHARLITERAL = 282,
     REALLITERAL = 283,
     BOOLEANLITERAL = 284,
-    NOTOP = 285,
-    ANDOP = 286,
-    OROP = 287,
-    EQU = 288,
-    NEQU = 289,
-    GT = 290,
-    LT = 291,
-    GEQUAL = 292,
-    LEQUAL = 293,
-    IF = 294,
-    THEN = 295,
+    APOSTROPHE = 285,
+    IF = 286,
+    THEN = 287,
+    LTHAN = 288,
+    GTHAN = 289,
+    GEQUAL = 290,
+    LEQUAL = 291,
+    EQUAL = 292,
+    NEQUAL = 293,
+    AND = 294,
+    OR = 295,
     WHILE = 296,
-    DO = 297
+    DO = 297,
+    NOT = 298,
+    TRUE = 299,
+    FALSE = 300
   };
 #endif
 
@@ -96,16 +99,16 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 29 "SPparser.y"
+#line 37 "SPparser.y"
 
        int ival;
        char * sval;
-	   bool bval;
-	   char cval;
-	   float rval;
-       
+           bool bval;
+           char cval;
+           float rval;
 
-#line 103 "token.tab.h"
+
+#line 112 "token.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

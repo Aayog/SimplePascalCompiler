@@ -7,55 +7,61 @@ extern "C" int yylex();
 %}
 letter  [a-zA-Z]
 digit   [0-9]
-semicolon	[;]
-colon		[:]
-underscore	[_]
+semicolon       [;]
+colon           [:]
+underscore      [_]
 apostrophe [']
-lparen		[(]
-rparen		[)]
+lparen          [(]
+rparen          [)]
+lthan       [<]
+gthan           [>]
+gequal          ([>][=])
+lequal          ([<][=])
+equal           [=]
+nequal          ([<][>])
 comma           [,]
-period		[\.]
+period          [\.]
 assignop        [:][=]
-plusop		[+]
-minusop  	[-]
+plusop          [+]
+minusop         [-]
 multop      [*]
 divop       [/]
 modop       [%]
-notop       [Nn][Oo][Tt]
-andop       [Aa][Nn][Dd]
-orop        [Oo][Rr]
-equ         [\=]
-nequ        [<][>]
-gt          [>]
-lt          [<]
-gequal      [>][=]
-lequal      [<][=]
-if          [Ii][Ff]
-then        [Tt][Hh][Ee][Nn]
-while       [Ww][Hh][Ii][Ll][Ee]
-do          [Dd][Oo]
 intliteral      (-?[1-9]{digit}*)
 realliteral     ([+-]?([0-9]*[.])?[0-9]+)
-charliteral     ([a-zA-Z0-9])
-booleanliteral  ([Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee])
+charliteral     (\'.\')
+booleanliteral  (true|false)
 id              [a-zA-Z_][a-zA-Z0-9_]*
 %%
 [ \t]+                                          {/* do nothing */}
 [\n]                                            {/* new line*/}
-[Pp][Rr][Oo][Gg][Rr][Aa][Mm]			{return PROGRAM;}
-[Vv][Aa][Rr]					{return VAR;}
-[Ii][Nn][Tt][Ee][Gg][Ee][Rr]			{return INTEGER;}
-[Rr][Ee][Aa][Ll]                        {return REAL;}
-[Cc][Hh][Aa][Rr]                        {return CHAR;}
-[Bb][Oo][Oo][Ll][Ee][Aa][Nn]            {return BOOLEAN;}
+[Pp][Rr][Oo][Gg][Rr][Aa][Mm]                    {return PROGRAM;}
+[Vv][Aa][Rr]                                    {return VAR;}
+[Ii][Nn][Tt][Ee][Gg][Ee][Rr]                    {return INTEGER;}
+[Rr][Ee][Aa][Ll]                                {return REAL;}
+[Cc][Hh][Aa][Rr]                                {return CHAR;}
+[Bb][Oo][Oo][Ll][Ee][Aa][Nn]                    {return BOOLEAN;}
 [Bb][Ee][Gg][Ii][Nn]                            {return START;}
 [Ee][Nn][Dd]                                    {return END;}
 [Rr][Ee][Aa][Dd]                                {return READ;}
 [Ww][Rr][Ii][Tt][Ee]                            {return WRITE;}
+[Ii][Ff]                                        {return IF;}
+[Tt][Hh][Ee][Nn]                                {return THEN;}
+[Ww][Hh][Ii][Ll][Ee]                            {return WHILE;}
+[Dd][Oo]                                        {return DO;}
+[Aa][Nn][Dd]                                    {return AND;}
+[Oo][Rr]                                        {return OR;}
+[Nn][Oo][Tt]                                    {return NOT;}
+{nequal}                                        {return NEQUAL;}
+{lthan}                                         {return LTHAN;}
+{gthan}                                         {return GTHAN;}
+{gequal}                                        {return GEQUAL;}
+{lequal}                                        {return LEQUAL;}
+{equal}                                         {return EQUAL;}
 {comma}                                         {return COMMA;}
-{period}					                    {return PERIOD;}
+{period}                                        {return PERIOD;}
 {semicolon}                                     {return SEMICOLON;}
-{colon}						                    {return COLON;}
+{colon}                                         {return COLON;}
 {lparen}                                        {return LPAREN;}
 {rparen}                                        {return RPAREN;}
 {assignop}                                      {return ASSIGNOP;}
@@ -64,19 +70,6 @@ id              [a-zA-Z_][a-zA-Z0-9_]*
 {multop}                                        {return MULTOP;}
 {divop}                                         {return DIVOP;}
 {modop}                                         {return MODOP;}
-{notop}                                         {return NOTOP;}
-{andop}                                         {return ANDOP;}
-{orop}                                          {return OROP;}
-{equ}                                           {return EQUAL;}
-{nequ}                                          {return NOTEQUAL;}
-{gt}                                            {return GREATERTHAN;}
-{lt}                                            {return LESSTHAN;}
-{gequal}                                        {return GEQUAL;}
-{lequal}                                        {return LEQUAL;}
-{if}                                            {return IF;}
-{then}                                          {return THEN;}
-{while}                                         {return WHILE;}
-{do}                                            {return DO;}
 {apostrophe}                                    {return APOSTROPHE;}
 {intliteral}                                    {yylval.sval = strdup(yytext); return INTLITERAL;}
 {realliteral}                                   {yylval.sval = strdup(yytext); return REALLITERAL;}
@@ -84,4 +77,3 @@ id              [a-zA-Z_][a-zA-Z0-9_]*
 {booleanliteral}                                {yylval.sval = strdup(yytext); return BOOLEANLITERAL;}
 {id}                                            {yylval.sval = strdup(yytext); return ID;}
 %%
-
