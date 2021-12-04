@@ -21,9 +21,9 @@ std::ofstream outFile;
 void assign (char [], char []);
 void decl_id (char [], char []);
 void finish();
-char* gen_infix(std::string, std::string, std::string);
-char* gen_bool(std::string, std::string, std::string);
-char* gen_bool(std::string);
+std::string gen_infix(std::string, std::string, std::string);
+std::string gen_bool(std::string, std::string, std::string);
+std::string gen_bool(std::string);
 void read_id (char[]);
 void write_expr(char[], char[]);
 void while_expr();
@@ -36,7 +36,7 @@ void yyerror(const char []);
 %}
 %union{
        int ival;
-       char * sval;
+       std::string sval;
            bool bval;
            char cval;
            float rval;
@@ -81,10 +81,10 @@ decl_section  :  SEMICOLON {line_no++;}
 vars_section:   variables
                 | vars_section variables
                 ;
-variables   :    INTEGER {strcpy(type, "integer");} d_list SEMICOLON {line_no++;}
-                 | CHAR {strcpy(type, "char");} d_list SEMICOLON {line_no++;}
-                 | REAL {strcpy(type, "real");} d_list SEMICOLON {line_no++;}
-                 | BOOLEAN {strcpy(type, "boolean");} d_list SEMICOLON {line_no++;}
+variables   :    INTEGER {type =  "integer");} d_list SEMICOLON {line_no++;}
+                 | CHAR {type =  "char");} d_list SEMICOLON {line_no++;}
+                 | REAL {type =  "real");} d_list SEMICOLON {line_no++;}
+                 | BOOLEAN {type =  "boolean");} d_list SEMICOLON {line_no++;}
                 ;
 d_list      :  ident  { decl_id($1, type); }
                  | d_list COMMA ident { decl_id($3, type);}
@@ -135,22 +135,22 @@ boolterm : ident {strcpy($$, $1);}
 boolterm : BOOLEANLITERAL {strcpy($$,strdup(yylval.sval)); strcpy(type, "boolean");}
         ;
 expr       :    term {$$ = strdup($1);}
-                | expr div_op term {strcpy($$,gen_infix($1,$2,$3));}
-                | expr mult_op term {strcpy($$,gen_infix($1,$2,$3));}
-                | expr mod_op term {strcpy($$,gen_infix($1,$2,$3));}
-                | expr add_op term {strcpy($$,gen_infix($1,$2,$3));}
-                | expr sub_op term {strcpy($$,gen_infix($1,$2,$3));}
+                | expr div_op term {$$ = gen_infix($1,$2,$3);}
+                | expr mult_op term {$$ = gen_infix($1,$2,$3);}
+                | expr mod_op term {$$ = gen_infix($1,$2,$3);}
+                | expr add_op term {$$ = gen_infix($1,$2,$3);}
+                | expr sub_op term {$$ = gen_infix($1,$2,$3);}
                 | {error("EXPRESSION EXPECTED, BUT FOUND");}
                 ;
 term      :     lparen expression rparen   {strcpy($$,$2);}
                 ;
 term      :     ident      {strcpy($$,$1);}
                 ;
-term      :     INTLITERAL {strcpy($$,strdup(yylval.sval)); strcpy(type, "integer"); }
-                | REALLITERAL {strcpy($$,strdup(yylval.sval)); strcpy(type, "real");}
-                | CHARLITERAL{strcpy($$, strdup(yylval.sval)); strcpy(type, "char");}
-                | BOOLEANLITERAL {strcpy($$,strdup(yylval.sval)); strcpy(type, "boolean");}
-                | {error("NUMERIC VALUE EXPECTED, BUT FOUND");}
+term      :     INTLITERAL {$$ = strdup(yylval.sval); type = "integer";}
+                | REALLITERAL {$$ = strdup(yylval.sval); type = "real";}
+               | CHARLITERAL{$$ =  strdup(yylval.sval); type = "char";}
+               | BOOLEANLITERAL {$$ = strdup(yylval.sval); type = "boolean";}
+               | {error("NUMERIC VALUE EXPECTED, BUT FOUND");}
                 ;
 lparen    :     LPAREN
                 | {error("( EXPECTED , BUT FOUND");}
