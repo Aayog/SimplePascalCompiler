@@ -6,13 +6,13 @@
 
 extern std::ofstream outFile;
 extern SymbolTable st;
-void error(char msg[]);
-int stringcmp(char a[], char b[]);
+void error(std::string msg);
+int stringcmp(std::string a, std::string b);
 static int max_temp_int = 0;
 static int max_temp_real = 0;
 static int max_temp_bool = 0;
-static int max_temp_char = 0;
-char * getTemp(char type[]) {
+static int max_temp_char= 0;
+char* getTemp(std::string type) {
 	// converting the previous iteration where only an int is needed
 	// into all data types
 
@@ -46,7 +46,7 @@ char * getTemp(char type[]) {
  * 
  */
 
-char* getOpType(char operand[]) {
+char* getOpType(std::string operand) {
   if (st.exists(operand)){
     return st.getType(operand);
   }
@@ -58,7 +58,7 @@ char* getOpType(char operand[]) {
    *
    */ 
 }
-char* getOp(bool intOps, char op[]) {
+char* getOp(bool intOps, std::string op) {
   if (intOps) {
     if (stringcmp("Add", op) == 0) {
       return "iadd";
@@ -88,15 +88,15 @@ char* getOp(bool intOps, char op[]) {
   return nullptr;
 }
 
-char* coerceType(char operand[], char type[]){
-  char currType[] = st.getType(operand);
+char* coerceType(std::string operand, std::string type){
+  std::string currType = st.getType(operand);
   if (stringcmp(currType, type) != 0){
     if ((stringcmp(currType, "integer") == 0 || stringcmp(currType, "boolean") == 0)  && stringcmp("real", type) == 0) {
-       char temp[] = getTemp(type);
+       std::string temp = getTemp(type);
        outFile << "itor " << operand << ", " << temp << std::endl;
        return temp;
     } else if (stringcmp(currType, "real") == 0 && stringcmp("integer", type) == 0) {
-	char temp[] = getTemp(type);
+	std::string temp = getTemp(type);
 	outFile << "rtoi " << operand << ", " << temp << std::endl;
 	return temp;
     }
@@ -106,7 +106,7 @@ char* coerceType(char operand[], char type[]){
 
 }
 
-char* gen_infix(char operand1[], char op[], char operand2[])
+char* gen_infix(std::string operand1, std::string op, std::string operand2)
 {  
   // char tempop[8];
   // this is a placeholeder, need to design a way to get the type from operands!
@@ -134,7 +134,7 @@ char* gen_infix(char operand1[], char op[], char operand2[])
   return (tempname);
 }
 
-char* gen_infix_not(char operand1[]){
+char* gen_infix_not(std::string operand1){
   std::string type1 = getOpType(operand1);
     if (type1 == "boolean") {
         std::string temp = getTemp(type1);
@@ -149,11 +149,11 @@ char* gen_infix_not(char operand1[]){
   return operand1;
 }
 
-void error(char msg[]) {
+void error(std::string msg) {
   throw msg;
 }
 
-int stringcmp(char a[], char b[]) {
+int stringcmp(std::string a, std::string b) {
   if (a == b) {
     return 0;
   } else if (a < b){
